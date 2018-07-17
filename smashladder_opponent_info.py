@@ -45,7 +45,7 @@ while True:
     opponent_username = "Searching for opponent..."
     opponent_location = ""
     opponent_rank = ""
-    
+
     # get the player's info who doesn't match your id
     if "match" in match:
         if match["match"]["player1"]["id"] == my_id:
@@ -62,8 +62,10 @@ while True:
         r = requests.get("https://www.smashladder.com/api/v1/player/profile?id=" + opponent_id, headers=headers)
         opponent_profile = json.loads(r.text)
         # melee is hardcoded as ladder "2"
-        opponent_rank = opponent_profile["user"]["ladder_information"]["2"]["league"].get("name", "Unranked")
-        if opponent_rank != "Unranked":
+        opponent_rank = opponent_profile["user"]["ladder_information"]["2"]["league"]["name"]
+        if opponent_rank is None:
+            opponent_rank = "Unranked"
+        else:
             opponent_rank += " " + opponent_profile["user"]["ladder_information"]["2"]["league"]["division"]
 
     # write to opponent_info.txt
